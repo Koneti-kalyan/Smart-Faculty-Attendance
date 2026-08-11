@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Faculty Attendance - SVPCET Prototype</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Leaflet.js for GPS Map Integration -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+
+        <!-- Left Side: Interactive Portal Control Panel (Desktop Only) -->
+        <main class="portal-info">
+            <header class="portal-header">
+                <div class="logo-wrapper">
+                    <!-- SVG College Logo -->
+                    <svg class="college-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M50 5L15 20V50C15 72 35 90 50 95C65 90 85 72 85 50V20L50 5Z" fill="#0C182F"
+                            stroke="#00F2FE" stroke-width="3" />
+                        <path d="M50 15L23 27V50C23 67.5 37.8 81.8 50 86C62.2 81.8 77 67.5 77 50V27L50 15Z"
+                            fill="#1A2F50" />
+                        <!-- Neural Face Lines in Eagle shape / Crest -->
+                        <path d="M50 30V40" stroke="#00F2FE" stroke-width="2" stroke-linecap="round" />
+                        <circle cx="50" cy="30" r="3" fill="#00F2FE" />
+                        <circle cx="40" cy="45" r="2.5" fill="#00F2FE" />
+                        <circle cx="60" cy="45" r="2.5" fill="#00F2FE" />
+                        <circle cx="35" cy="60" r="2.5" fill="#00F2FE" />
+                        <circle cx="65" cy="60" r="2.5" fill="#00F2FE" />
+                        <circle cx="50" cy="70" r="3" fill="#10B981" />
+                        <path d="M50 30L40 45M50 30L60 45M40 45L35 60M60 45L65 60M35 60L50 70M65 60L50 70M50 40L50 70"
+                            stroke="#00F2FE" stroke-width="1.5" stroke-opacity="0.6" />
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <h2>SVPCET</h2>
+                    <p>Smart Attendance System</p>
+                </div>
+            </header>
+
+            <section class="portal-details">
+                <h1>Faculty AI Face Attendance</h1>
+                <p class="description">
+                    A premium, touch-friendly Android UI prototype designed for Sri Venkatesa Perumal College of
+                    Engineering & Technology (SVPCET) faculty members. Featuring secure facial biometrics, automated
+                    check-in/out, and modern tracking dashboards.
+                </p>
+
+                <!-- Quick Screen Switcher for Testing / Demoing -->
+                <div class="control-card">
+                    <h3>Prototype Navigation Controls</h3>
+                    <p class="control-hint">Simulate different screens, states, and operations instantly:</p>
+
+                    <div class="btn-grid">
+                        <button class="ctrl-btn active" data-screen="splash">
+                            <i data-lucide="play-circle"></i> 1. Splash Screen
+                        </button>
+                        <button class="ctrl-btn" data-screen="login">
+                            <i data-lucide="log-in"></i> 2. Login Screen
+                        </button>
+                        <button class="ctrl-btn" data-screen="dashboard">
+                            <i data-lucide="layout-dashboard"></i> 3. Faculty Dashboard
+                        </button>
+                        <button class="ctrl-btn" data-screen="facescan">
+                            <i data-lucide="scan-eye"></i> 4. Face Recognition
+                        </button>
+                        <button class="ctrl-btn" data-screen="success">
+                            <i data-lucide="check-circle2"></i> 5. Success Screen
+                        </button>
+                        <button class="ctrl-btn" data-screen="history">
+                            <i data-lucide="calendar"></i> 6. Attendance History
+                        </button>
+                    </div>
+
+                    <div class="simulation-actions">
+                        <h4>Simulation Controls</h4>
+                        <div class="sim-btn-wrapper">
+                            <button id="sim-face-detected" class="action-btn">
+                                <i data-lucide="shield-check"></i> Face Detected
+                            </button>
+                            <button id="sim-face-far" class="action-btn">
+                                <i data-lucide="move"></i> Move Closer
+                            </button>
+                            <button id="sim-face-lighting" class="action-btn">
+                                <i data-lucide="sun"></i> Improve Lighting
+                            </button>
+                            <button id="sim-camera-toggle" class="action-btn highlight">
+                                <i data-lucide="camera"></i> Toggle Real Camera
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="simulation-actions" style="margin-top: 15px;">
+                        <h4>GPS Provider Controls</h4>
+                        <div class="sim-btn-wrapper">
+                            <button id="sim-gps-campus" class="action-btn highlight">
+                                <i data-lucide="building"></i> Mock SVPCET Puttur
+                            </button>
+                            <button id="sim-gps-remote" class="action-btn">
+                                <i data-lucide="globe"></i> Mock Out of Zone
+                            </button>
+                            <button id="sim-gps-real" class="action-btn">
+                                <i data-lucide="smartphone"></i> Device Location
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="simulation-actions" style="margin-top: 15px;">
+                        <h4>Biometric Match Simulation</h4>
+                        <div class="sim-btn-wrapper">
+                            <button id="sim-face-match" class="action-btn highlight">
+                                <i data-lucide="check-circle"></i> Force Match
+                            </button>
+                            <button id="sim-face-mismatch" class="action-btn">
+                                <i data-lucide="x-circle"></i> Force Mismatch
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tech-stack-info">
+                    <span class="tech-badge"><i data-lucide="smartphone"></i> Android SDK 34 UI</span>
+                    <span class="tech-badge"><i data-lucide="shield-check"></i> Biometric Auth 3.0</span>
+                    <span class="tech-badge"><i data-lucide="cpu"></i> On-Device AI</span>
+                </div>
+            </section>
+
+            <footer class="portal-footer">
+                <p>&copy; 2026 SVPCET - Department of CS and AI. Developed for modern administration.</p>
+            </footer>
+        </main>
+
+        <!-- Right Side: High Fidelity Simulated Android Device -->
+        <section class="device-column">
+            <!-- Simulated Android Phone Frame -->
+            <div class="android-phone">
+
+                <!-- Status Bar / Notch -->
+                <div class="device-header">
+                    <div class="notch"></div>
+                    <div class="status-bar">
+                        <span class="time-display" id="device-time">09:41</span>
+                        <div class="status-icons">
+                            <i data-lucide="wifi"></i>
+                            <i data-lucide="signal"></i>
+                            <div class="battery-icon">
+                                <span class="battery-level"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Inner Screen Area -->
+                <div class="device-screen-container" id="screen-container">
+
+                    <!-- SCREEN 1: SPLASH SCREEN -->
+                    <div class="screen active" id="screen-splash" data-screen-title="Splash">
+                        <div class="splash-content">
+                            <!-- Glowing background elements -->
+                            <div class="glowing-circle circle-1"></div>
+                            <div class="glowing-circle circle-2"></div>
+
+                            <div class="splash-logo-container">
+                                <!-- Modern Neural College Crest -->
+                                <svg class="splash-logo animate-pulse" viewBox="0 0 100 100" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M50 5L15 20V50C15 72 35 90 50 95C65 90 85 72 85 50V20L50 5Z" fill="#0C182F"
+                                        stroke="#00F2FE" stroke-width="3" />
+                                    <path d="M50 15L23 27V50C23 67.5 37.8 81.8 50 86C62.2 81.8 77 67.5 77 50V27L50 15Z"
+                                        fill="#1A2F50" />
+                                    <path d="M50 30V40" stroke="#00F2FE" stroke-width="2" stroke-linecap="round" />
+                                    <circle cx="50" cy="30" r="3" fill="#00F2FE" />
+                                    <circle cx="40" cy="45" r="2.5" fill="#00F2FE" />
+                                    <circle cx="60" cy="45" r="2.5" fill="#00F2FE" />
+                                    <circle cx="35" cy="60" r="2.5" fill="#00F2FE" />
+                                    <circle cx="65" cy="60" r="2.5" fill="#00F2FE" />
+                                    <circle cx="50" cy="70" r="3" fill="#10B981" />
+                                    <path
+                                        d="M50 30L40 45M50 30L60 45M40 45L35 60M60 45L65 60M35 60L50 70M65 60L50 70M50 40L50 70"
+                                        stroke="#00F2FE" stroke-width="1.5" stroke-opacity="0.6" />
+                                </svg>
+                            </div>
+
+                            <div class="splash-text">
+                                <h2 class="college-abbr">SVPCET</h2>
+                                <h1 class="system-title">Smart Faculty<br>Attendance</h1>
+                                <p class="system-subtitle">Secured by Face Biometrics</p>
+                            </div>
+
+                            <!-- Modern AI Face Scan Preloader -->
+                            <div class="scan-anim-wrapper">
+                                <div class="scan-frame-mini">
+                                    <div class="laser-line"></div>
+                                    <svg class="face-stencil" viewBox="0 0 60 70" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <!-- Face outline path -->
+                                        <path
+                                            d="M10 25C10 15 18 10 30 10C42 10 50 15 50 25C50 35 48 45 42 53C36 61 30 65 30 65C30 65 24 61 18 53C12 45 10 35 10 25Z"
+                                            stroke="#00F2FE" stroke-width="2" stroke-linecap="round"
+                                            stroke-dasharray="2 4" />
+                                        <!-- Bounding box corners -->
+                                        <path d="M5 15V5H15M45 5H55V15M5 55V65H15M45 65H55V55" stroke="#00F2FE"
+                                            stroke-width="2" />
+                                    </svg>
+                                    <div class="pulsing-radar"></div>
+                                </div>
+                                <div class="loading-bar-container">
+                                    <div class="loading-progress"></div>
+                                </div>
+                                <span class="scanning-status">Initializing Neural Engines...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SCREEN 2: LOGIN SCREEN -->
+                    <div class="screen" id="screen-login" data-screen-title="Login">
+                        <div class="login-wrapper-content">
+
+                            <!-- Header with Brand -->
+                            <div class="app-branding">
+                                <svg class="login-crest" viewBox="0 0 100 100" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M50 5L15 20V50C15 72 35 90 50 95C65 90 85 72 85 50V20L50 5Z" fill="#0C182F"
+                                        stroke="#00F2FE" stroke-width="2" />
+                                    <path d="M50 15L23 27V50C23 67.5 37.8 81.8 50 86C62.2 81.8 77 67.5 77 50V27L50 15Z"
+                                        fill="#1A2F50" />
+                                    <!-- Simplified Neural Face -->
+                                    <circle cx="50" cy="35" r="3" fill="#00F2FE" />
+                                    <circle cx="42" cy="48" r="2" fill="#00F2FE" />
+                                    <circle cx="58" cy="48" r="2" fill="#00F2FE" />
+                                    <circle cx="50" cy="65" r="2.5" fill="#10B981" />
+                                    <path d="M50 35L42 48M50 35L58 48M42 48L50 65M58 48L50 65" stroke="#00F2FE"
+                                        stroke-width="1" stroke-opacity="0.6" />
+                                </svg>
+                                <h2>SVPCET</h2>
+                                <p class="brand-tag">Sri Venkatesa Perumal College of Engineering & Technology</p>
+                            </div>
+
+                            <div class="login-form-card" id="login-card-view">
+                                <div class="form-title-area">
+                                    <h3>Faculty Portal Login</h3>
+                                    <p>Access your attendance and schedule dashboard</p>
+                                </div>
+
+                                <div class="input-group">
+                                    <label for="faculty-id">Faculty ID</label>
+                                    <div class="input-wrapper">
+                                        <i data-lucide="user" class="input-icon"></i>
+                                        <input type="text" id="faculty-id" value="SVPCET-CS-1049"
+                                            placeholder="Enter Faculty ID">
+                                    </div>
+                                </div>
+
+                                <div class="input-group">
+                                    <label for="faculty-password">Password</label>
+                                    <div class="input-wrapper">
+                                        <i data-lucide="lock" class="input-icon"></i>
+                                        <input type="password" id="faculty-password" value="password123"
+                                            placeholder="Enter Password">
+                                        <button type="button" class="btn-toggle-password">
+                                            <i data-lucide="eye" class="password-icon"></i>
+                                        </button>
+                                    </div>
+                                    <a href="#" class="forgot-pass-link">Forgot Password?</a>
+                                    <span id="login-error-message"
+                                        style="display: none; color: var(--color-danger); font-size: 11px; margin-top: 6px; font-weight: 500;"><i
+                                            data-lucide="alert-circle"
+                                            style="width: 12px; height: 12px; display: inline-block; vertical-align: middle; margin-right: 4px; stroke: var(--color-danger);"></i>Incorrect
+                                        Faculty ID or Password.</span>
+                                </div>
+
+                                <button type="button" class="primary-btn" id="btn-login-manual">
+                                    <span>Sign In</span>
+                                    <i data-lucide="arrow-right"></i>
+                                </button>
+
+                                <div style="text-align: center; margin-top: 15px;">
+                                    <span style="font-size: 11px; color: var(--text-muted-dark);">New Faculty? </span>
+                                    <a href="#" id="link-show-register"
+                                        style="font-size: 11px; color: var(--color-accent); font-weight: 600; text-decoration: none; border-bottom: 1px dashed var(--color-accent);">Register
+                                        Account</a>
+                                </div>
+                            </div>
+
+                            <!-- FACULTY REGISTRATION CARD (Base Details Form) -->
+                            <div class="login-form-card" id="register-card-view" style="display: none;">
+                                <div class="form-title-area">
+                                    <h3>Faculty Registration</h3>
+                                    <p>Setup your account base credential profile</p>
+                                </div>
+
+                                <div class="input-group">
+                                    <label for="reg-faculty-name">Full Name</label>
+                                    <div class="input-wrapper">
+                                        <i data-lucide="user-check" class="input-icon"></i>
+                                        <input type="text" id="reg-faculty-name" placeholder="Dr. Sarah Jenkins">
+                                    </div>
+                                </div>
+
+                                <div class="input-group">
+                                    <label for="reg-faculty-id">Faculty ID</label>
+                                    <div class="input-wrapper">
+                                        <i data-lucide="hash" class="input-icon"></i>
+                                        <input type="text" id="reg-faculty-id" placeholder="SVPCET-CS-1049">
+                                    </div>
+                                </div>
+
+                                <div class="input-group">
+                                    <label for="reg-faculty-dept">Department</label>
+                                    <div class="input-wrapper">
+                                        <i data-lucide="shapes" class="input-icon"></i>
+                                        <select id="reg-faculty-dept"
+                                            style="width: 100%; background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: white; padding: 12px 14px 12px 40px; font-size: 13px; font-weight: 500; appearance: none; -webkit-appearance: none; cursor: pointer; box-sizing: border-box;">
+                                            <option value="CS Department">Dept. of Computer Science</option>
+                                            <option value="CSE Department">Dept. of Computer Science & Engineering
+                                            </option>
+                                            <option value="ECE Department">Dept. of Electronics & Communication</option>
+                                            <option value="EEE Department">Dept. of Electrical & Electronics</option>
+                                            <option value="Mechanical Dept">Dept. of Mechanical Engineering</option>
+                                            <option value="Civil Department">Dept. of Civil Engineering</option>
+                                            <option value="Science & Humanities">Dept. of Science & Humanities</option>
+                                        </select>
+                                        <i data-lucide="chevron-down"
+                                            style="position: absolute; right: 14px; top: 12px; pointer-events: none; width: 14px; height: 14px; color: var(--text-muted-dark);"></i>
+                                    </div>
+                                </div>
+
+                                <div class="input-group">
+                                    <label for="reg-faculty-password">Password</label>
+                                    <div class="input-wrapper">
+                                        <i data-lucide="lock" class="input-icon"></i>
+                                        <input type="password" id="reg-faculty-password" placeholder="Create Password">
+                                    </div>
+                                </div>
+
+                                <button type="button" class="primary-btn" id="btn-register-submit">
+                                    <span>Register & Lock Profile</span>
+                                    <i data-lucide="user-plus"></i>
+                                </button>
+
+                                <div style="text-align: center; margin-top: 15px;">
+                                    <span style="font-size: 11px; color: var(--text-muted-dark);">Already registered?
+                                    </span>
+                                    <a href="#" id="link-show-login"
+                                        style="font-size: 11px; color: var(--color-accent); font-weight: 600; text-decoration: none; border-bottom: 1px dashed var(--color-accent);">Sign
+                                        In</a>
+                                </div>
+                            </div>
+
+                            <div class="login-footer-info">
+                                <p><i data-lucide="shield-alert"></i> Secured connection. Your biometric data is stored
+                                    locally and never leaves your device.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SCREEN 3: FACULTY DASHBOARD -->
+                    <div class="screen" id="screen-dashboard" data-screen-title="Dashboard">
+                        <!-- Dashboard Header -->
+                        <header class="app-top-bar">
+                            <div class="header-profile-block">
+                                <div class="avatar-ring">
+                                    <!-- Faculty Avatar (Premium vector outline or inline SVG) -->
+                                    <svg class="faculty-avatar-svg" id="dashboard-avatar-svg" viewBox="0 0 50 50"
+                                        fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="25" cy="25" r="23" fill="#E2E8F0" stroke="#00F2FE"
+                                            stroke-width="2" />
+                                        <circle cx="25" cy="18" r="8" fill="#1A2F50" />
+                                        <path
+                                            d="M9 38C9 31 16 28 25 28C34 28 41 31 41 38C41 42 34 45 25 45C16 45 9 42 9 38Z"
+                                            fill="#1A2F50" />
+                                        <circle cx="36" cy="12" r="4" fill="#10B981" stroke="#FFFFFF"
+                                            stroke-width="1.5" /> <!-- Active status dot -->
+                                    </svg>
+                                    <img id="dashboard-avatar-img" src="" alt="Avatar"
+                                        style="display: none; width: 46px; height: 46px; border-radius: 50%; border: 2px solid var(--color-accent); object-fit: cover;">
+                                </div>
+                                <div class="faculty-meta">
+                                    <span class="welcome-label">Welcome back,</span>
+                                    <h3 class="faculty-name-display" id="faculty-name-main">Dr. Sarah Jenkins</h3>
+                                    <span class="dept-label" id="faculty-dept-main">Dept. of Computer Science</span>
+                                </div>
+                            </div>
+                            <!-- Notifications / College Icon -->
+                            <div class="top-nav-actions">
+                                <div class="notification-badge-wrapper">
+                                    <button class="nav-circle-btn"><i data-lucide="bell"></i></button>
+                                    <span class="badge-dot"></span>
+                                </div>
+                            </div>
+                        </header>
+
+                        <!-- Dashboard Scrollable Body -->
+                        <div class="dashboard-scroll-content">
+                            <!-- Date-Card and Summary -->
+                            <div class="date-header-card">
+                                <div class="date-info">
+                                    <span class="day-lbl" id="dashboard-day">Thursday</span>
+                                    <h4 class="full-date-lbl" id="dashboard-date">July 23, 2026</h4>
+                                </div>
+                                <div class="location-badge" id="dashboard-location-badge">
+                                    <i data-lucide="map-pin"></i>
+                                    <span>SVPCET Main Campus</span>
+                                </div>
+                            </div>
+
+                            <!-- Stats Gauge Card -->
+                            <div class="stats-overview-card">
+                                <div class="gauge-container">
+                                    <div class="gauge-circle-outer">
+                                        <svg class="progress-ring-svg" viewBox="0 0 100 100">
+                                            <circle class="progress-ring-bg" cx="50" cy="50" r="42" stroke-width="8" />
+                                            <circle class="progress-ring-fg" id="percentage-ring" cx="50" cy="50" r="42"
+                                                stroke-width="8" stroke-dasharray="264" stroke-dashoffset="264" />
+                                        </svg>
+                                        <div class="gauge-text">
+                                            <span class="gauge-percent" id="attendance-percent-val">0%</span>
+                                            <span class="gauge-lbl">Attendance</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="quick-stats-grid">
+                                    <div class="stat-box">
+                                        <span class="stat-count text-green">0</span>
+                                        <span class="stat-lbl">Present</span>
+                                    </div>
+                                    <div class="stat-box">
+                                        <span class="stat-count text-orange">0</span>
+                                        <span class="stat-lbl">Late</span>
+                                    </div>
+                                    <div class="stat-box">
+                                        <span class="stat-count text-red">0</span>
+                                        <span class="stat-lbl">Absent</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Current Check-in Status Card -->
+                            <div class="status-alert-card status-out" id="status-display-bubble">
+                                <div class="status-bubble-icon">
+                                    <i data-lucide="circle-dot"></i>
+                                </div>
+                                <div class="status-bubble-text">
+                                    <span class="status-title-tag">Current Attendance Status</span>
+                                    <p class="status-desc-text" id="status-string-detail">Not checked in yet. Please log
+                                        your presence.</p>
+                                </div>
+                            </div>
+
+                            <!-- GPS Geofencing Status Card -->
+                            <div class="gps-geofence-card" id="gps-card">
+                                <div class="gps-header">
+                                    <div class="gps-title-group">
+                                        <i data-lucide="map-pinned" class="gps-card-icon"></i>
+                                        <h4>Geofence Verification</h4>
+                                    </div>
+                                    <span class="gps-status-pill checking" id="gps-status-pill">
+                                        <span class="pulse-indicator"></span>
+                                        <span id="gps-status-text">Checking GPS...</span>
+                                    </span>
+                                </div>
+                                <div class="gps-map-wrapper">
+                                    <div id="dashboard-gps-map"></div>
+                                    <div class="gps-map-overlay-coordinates">
+                                        <span id="gps-coordinates-text">Lat: --, Lon: --</span>
+                                    </div>
+                                </div>
+                                <div class="gps-details-panel">
+                                    <div class="gps-detail-row">
+                                        <span class="detail-label">Resolved Location</span>
+                                        <span class="detail-value" id="gps-details-place">Checking place name...</span>
+                                    </div>
+                                    <div class="gps-detail-row">
+                                        <span class="detail-label">Campus Distance</span>
+                                        <span class="detail-value" id="gps-details-distance">--</span>
+                                    </div>
+                                </div>
+                                <button class="gps-refresh-btn" id="btn-refresh-gps">
+                                    <i data-lucide="refresh-cw"></i>
+                                    <span>Sync Coordinates</span>
+                                </button>
+                            </div>
+
+                            <!-- Attendance Action Buttons (Big and Touch Friendly) -->
+                            <div class="check-actions-grid">
+                                <button class="check-btn btn-checkin" id="action-checkin">
+                                    <div class="icon-circle">
+                                        <i data-lucide="fingerprint"></i>
+                                    </div>
+                                    <span class="btn-main-txt">Perform Check-In</span>
+                                    <span class="btn-sub-txt">Shift Start Biometric Verification</span>
+                                </button>
+
+                                <button class="check-btn btn-checkout disabled" id="action-checkout">
+                                    <div class="icon-circle">
+                                        <i data-lucide="log-out"></i>
+                                    </div>
+                                    <span class="btn-main-txt">Perform Check-Out</span>
+                                    <span class="btn-sub-txt">End Shift & Sync Attendance</span>
+                                </button>
+                            </div>
+
+                            <!-- Quick Buttons / Grid Menu -->
+                            <div class="quick-menu-section">
+                                <h3 class="section-title">Quick Actions</h3>
+                                <div class="quick-grid">
+                                    <button class="grid-card-btn" id="btn-goto-history">
+                                        <i data-lucide="calendar-days" class="grid-icon color-blue"></i>
+                                        <span>Attendance History</span>
+                                    </button>
+                                    <button class="grid-card-btn" id="btn-goto-profile">
+                                        <i data-lucide="user-cog" class="grid-icon color-purple"></i>
+                                        <span>My Faculty Profile</span>
+                                    </button>
+                                    <button class="grid-card-btn" id="btn-goto-settings">
+                                        <i data-lucide="sliders" class="grid-icon color-teal"></i>
+                                        <span>Settings & Info</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Active Schedule Highlight -->
+                            <div class="schedule-section">
+                                <h3 class="section-title">Today's Lectures</h3>
+                                <div class="lecture-card">
+                                    <div class="time-block">
+                                        <span class="lecture-time">10:00 AM</span>
+                                        <span class="lecture-duration">60 mins</span>
+                                    </div>
+                                    <div class="divider-line"></div>
+                                    <div class="lecture-details">
+                                        <h4>Machine Learning (CS-601-A)</h4>
+                                        <p class="classroom-lbl"><i data-lucide="door-open"></i> Room 304 - Theoretical
+                                            Block</p>
+                                    </div>
+                                    <div class="lecture-status upcoming">Upcoming</div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- Bottom Navigation Bar -->
+                        <nav class="bottom-navbar">
+                            <button class="nav-item active" id="nav-dash">
+                                <i data-lucide="layout-grid"></i>
+                                <span>Home</span>
+                            </button>
+                            <button class="nav-item" id="nav-history">
+                                <i data-lucide="calendar"></i>
+                                <span>History</span>
+                            </button>
+                            <button class="nav-item" id="nav-scan">
+                                <i data-lucide="scan"></i>
+                                <span>Scan</span>
+                            </button>
+                            <button class="nav-item" id="nav-profile">
+                                <i data-lucide="user"></i>
+                                <span>Profile</span>
+                            </button>
+                        </nav>
+                    </div>
+
+                    <!-- SCREEN 3B: FACULTY PROFILE SCREEN -->
+                    <div class="screen" id="screen-profile" data-screen-title="My Profile">
+                        <!-- Profile Header -->
+                        <header class="app-top-bar">
+                            <div class="brand-left">
+                                <div class="brand-avatar-mini"
+                                    style="background: rgba(255, 255, 255, 0.05); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--color-accent);">
+                                    <i data-lucide="user"
+                                        style="color: var(--color-accent); width: 16px; height: 16px;"></i>
+                                </div>
+                                <div class="brand-text">
+                                    <h3 style="font-size: 14px; font-weight: 700; color: white; margin: 0;">Faculty
+                                        Profile</h3>
+                                    <span style="font-size: 10px; color: var(--text-muted-dark);">SVPCET Biometrics
+                                        Hub</span>
+                                </div>
+                            </div>
+                        </header>
+
+                        <!-- Profile Content -->
+                        <div class="profile-scroll-content"
+                            style="padding: 20px; display: flex; flex-direction: column; gap: 20px; overflow-y: auto; height: calc(100% - 60px);">
+
+                            <!-- Selfie Preview / Photo ID Badge -->
+                            <div class="profile-card"
+                                style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: var(--border-radius-lg); padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center;">
+                                <div class="profile-avatar-wrapper"
+                                    style="position: relative; width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--color-accent); padding: 4px; background: #0C182F;">
+                                    <img id="profile-avatar-img"
+                                        src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/><circle cx='12' cy='7' r='4'/></svg>"
+                                        alt="Profile avatar picture"
+                                        style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                                </div>
+                                <div class="biometric-badge" id="profile-bio-status-badge"
+                                    style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); padding: 4px 10px; border-radius: 20px; font-size: 11px; color: var(--color-danger); font-weight: 600; display: inline-flex; align-items: center;">
+                                    <i data-lucide="alert-circle"
+                                        style="width: 12px; height: 12px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i>Biometrics
+                                    Missing
+                                </div>
+                            </div>
+
+                            <!-- General Information Section -->
+                            <div class="profile-card"
+                                style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: var(--border-radius-lg); padding: 20px; display: flex; flex-direction: column; gap: 16px;">
+                                <h4
+                                    style="font-size: 11px; font-weight: 700; color: var(--color-accent); text-transform: uppercase; letter-spacing: 0.5px; margin: 0;">
+                                    Faculty Credentials</h4>
+
+                                <div class="detail-row"
+                                    style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 10px;">
+                                    <span style="font-size: 12px; color: var(--text-muted-dark);">Full Name</span>
+                                    <span id="profile-full-name"
+                                        style="font-size: 12px; color: white; font-weight: 600;">Dr. Sarah
+                                        Jenkins</span>
+                                </div>
+
+                                <div class="detail-row"
+                                    style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 10px;">
+                                    <span style="font-size: 12px; color: var(--text-muted-dark);">Faculty ID</span>
+                                    <span id="profile-faculty-id"
+                                        style="font-size: 12px; color: white; font-weight: 600; font-family: monospace;">SVPCET-CS-1049</span>
+                                </div>
+
+                                <div class="detail-row"
+                                    style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 10px;">
+                                    <span style="font-size: 12px; color: var(--text-muted-dark);">Department</span>
+                                    <span id="profile-department"
+                                        style="font-size: 12px; color: white; font-weight: 600;">CS Department</span>
+                                </div>
+
+                                <div class="detail-row"
+                                    style="display: flex; justify-content: space-between; padding-bottom: 4px;">
+                                    <span style="font-size: 12px; color: var(--text-muted-dark);">Institute</span>
+                                    <span style="font-size: 12px; color: white; font-weight: 600;">SVPCET Puttur</span>
+                                </div>
+                            </div>
+
+                            <!-- Logout Button (Last option) -->
+                            <button type="button" class="primary-btn" id="btn-profile-logout"
+                                style="background: linear-gradient(135deg, #EF4444 0%, #B91C1C 100%); margin-top: auto; border: none; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);">
+                                <span>Log Out Account</span>
+                                <i data-lucide="log-out"></i>
+                            </button>
+
+                        </div>
+                    </div>
+
+                    <!-- SCREEN 4: FACE RECOGNITION SCREEN -->
+                    <div class="screen" id="screen-facescan" data-screen-title="Face Recognition">
+                        <div class="camera-screen-wrapper">
+
+                            <!-- Header overlay -->
+                            <div class="camera-header-overlay">
+                                <button class="camera-back-btn" id="btn-cancel-scan">
+                                    <i data-lucide="chevron-left"></i>
+                                </button>
+                                <div class="camera-title-block">
+                                    <h3>Neural scan verification</h3>
+                                    <p id="biometric-flow-label">Shift Check-In</p>
+                                </div>
+                                <button class="camera-info-btn">
+                                    <i data-lucide="help-circle"></i>
+                                </button>
+                            </div>
+
+                            <!-- Live Camera Area (Simulated SVG/CSS or Webcam API overlay) -->
+                            <div class="camera-viewport-container">
+
+                                <!-- Actual Video Element for real camera simulation -->
+                                <video id="camera-stream" autoplay playsinline class="hidden-video"></video>
+
+                                <!-- Captured selfie canvas & image preview container -->
+                                <canvas id="selfie-canvas" style="display: none;"></canvas>
+                                <div class="selfie-preview-overlay" id="selfie-preview-container"
+                                    style="display: none;">
+                                    <img id="selfie-preview-img" src="" alt="Selfie Preview" />
+                                    <div class="selfie-actions-box">
+                                        <p>Is this face profile photo okay?</p>
+                                        <div class="selfie-btns-row">
+                                            <button id="btn-selfie-retake" class="selfie-btn secondary">Retake</button>
+                                            <button id="btn-selfie-save" class="selfie-btn primary">Register
+                                                Face</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Registered Database Profile Thumbnail -->
+                                <div class="registered-profile-badge" id="registered-badge" style="display: none;">
+                                    <span class="badge-lbl">Database Profile</span>
+                                    <div class="badge-thumb-container">
+                                        <img id="registered-thumb-img" src="" alt="Profile Thumb" />
+                                    </div>
+                                </div>
+
+                                <!-- Fallback Simulated Face Mesh / Cyber AI graphic if webcam not accessible -->
+                                <div class="camera-graphic-fallback" id="webcam-fallback">
+                                    <!-- Neural grid canvas / SVG face mesh background -->
+                                    <svg class="face-mesh-grid-svg" viewBox="0 0 200 200" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <!-- Concentric radar lines -->
+                                        <circle cx="100" cy="100" r="80" stroke="#00F2FE" stroke-width="0.5"
+                                            stroke-dasharray="4 8" stroke-opacity="0.3" />
+                                        <circle cx="100" cy="100" r="50" stroke="#00F2FE" stroke-width="0.5"
+                                            stroke-opacity="0.1" />
+
+                                        <!-- Mesh lines -->
+                                        <path
+                                            d="M100 20 C140 20, 160 50, 160 100 C160 150, 130 180, 100 180 C70 180, 40 150, 40 100 C40 50, 60 20, 100 20 Z"
+                                            stroke="#00F2FE" stroke-width="1" stroke-opacity="0.2" />
+
+                                        <!-- Vertical helper grids -->
+                                        <line x1="100" y1="10" x2="100" y2="190" stroke="#00F2FE" stroke-width="0.5"
+                                            stroke-opacity="0.2" stroke-dasharray="2 2" />
+                                        <line x1="10" y1="100" x2="190" y2="100" stroke="#00F2FE" stroke-width="0.5"
+                                            stroke-opacity="0.2" stroke-dasharray="2 2" />
+
+                                        <!-- Pulsing landmarks face node shapes -->
+                                        <g id="landmarks-group">
+                                            <!-- Brows -->
+                                            <circle cx="75" cy="80" r="3" fill="#00F2FE" class="landmark-node" />
+                                            <circle cx="85" cy="78" r="3" fill="#00F2FE" class="landmark-node" />
+                                            <circle cx="115" cy="78" r="3" fill="#00F2FE" class="landmark-node" />
+                                            <circle cx="125" cy="80" r="3" fill="#00F2FE" class="landmark-node" />
+                                            <!-- Eyes -->
+                                            <circle cx="80" cy="90" r="4" fill="#00F2FE" class="landmark-node" />
+                                            <circle cx="120" cy="90" r="4" fill="#00F2FE" class="landmark-node" />
+                                            <!-- Nose -->
+                                            <circle cx="100" cy="100" r="3.5" fill="#00F2FE" class="landmark-node" />
+                                            <circle cx="100" cy="112" r="3.5" fill="#00F2FE" class="landmark-node" />
+                                            <circle cx="92" cy="115" r="3" fill="#00F2FE" class="landmark-node" />
+                                            <circle cx="108" cy="115" r="3" fill="#00F2FE" class="landmark-node" />
+                                            <!-- Mouth -->
+                                            <path d="M85 135 Q100 145 115 135" stroke="#00F2FE" stroke-width="2.5"
+                                                fill="none" stroke-linecap="round" />
+                                            <circle cx="85" cy="135" r="3" fill="#00F2FE" class="landmark-node" />
+                                            <circle cx="115" cy="135" r="3" fill="#00F2FE" class="landmark-node" />
+                                            <circle cx="100" cy="142" r="3" fill="#00F2FE" class="landmark-node" />
+                                            <!-- Jawline nodes -->
+                                            <circle cx="50" cy="115" r="3" fill="#00F2FE" class="landmark-node" />
+                                            <circle cx="60" cy="140" r="3" fill="#00F2FE" class="landmark-node" />
+                                            <circle cx="75" cy="165" r="3" fill="#00F2FE" class="landmark-node" />
+                                            <circle cx="100" cy="175" r="3" fill="#00F2FE" class="landmark-node" />
+                                            <circle cx="125" cy="165" r="3" fill="#00F2FE" class="landmark-node" />
+                                            <circle cx="140" cy="140" r="3" fill="#00F2FE" class="landmark-node" />
+                                            <circle cx="150" cy="115" r="3" fill="#00F2FE" class="landmark-node" />
+                                        </g>
+                                    </svg>
+
+                                    <!-- Futuristic Avatar overlay under-mask -->
+                                    <div class="cyber-avatar-container">
+                                        <svg class="radar-scan-svg-nodes" viewBox="0 0 100 100" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <!-- Cybernetic circles -->
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <!-- Absolute Floating overlays inside camera viewport -->
+
+                                <!-- Large Rounded Rectangular Face Detection Frame -->
+                                <div class="face-detection-overlay-box" id="scanning-detector-box">
+                                    <!-- Top Left Border -->
+                                    <div class="corner t-l"></div>
+                                    <!-- Top Right Border -->
+                                    <div class="corner t-r"></div>
+                                    <!-- Bottom Left Border -->
+                                    <div class="corner b-l"></div>
+                                    <!-- Bottom Right Border -->
+                                    <div class="corner b-r"></div>
+
+                                    <!-- Animated Scanning Laser Line -->
+                                    <div class="laser-scanner-line" id="cam-laser-scanner"></div>
+
+                                    <!-- Face Landmark Connection Overlays -->
+                                    <div class="facial-points-layer" id="tracking-points-layer">
+                                        <!-- Rendered dynamically by javascript to follow face or mock scan -->
+                                    </div>
+                                </div>
+
+                                <!-- Ambient status message overlay at bottom of camera view -->
+                                <div class="floating-status-box" id="floating-status-container">
+                                    <div class="loader-dots-ring">
+                                        <span class="cyan-spinner"></span>
+                                    </div>
+                                    <span class="live-status-message" id="face-live-status-message">Position your face
+                                        inside the frame</span>
+                                </div>
+
+                                <!-- GPS Lock Notification -->
+                                <div class="gps-lock-tag" id="fs-gps-lock-tag">
+                                    <span class="gps-dot pulsing" id="fs-gps-dot"></span>
+                                    <span class="gps-text" id="facescan-gps-text">
+                                        <i data-lucide="map-pinned"></i> GPS Locked: SVPCET Area
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Bottom Instruction Bar & Action Trigger -->
+                            <div class="camera-actions-panel">
+                                <p class="instruction-paragraph"><i data-lucide="info"></i> Make sure your face is
+                                    well-lit and not covered by face masks or dark glasses.</p>
+
+                                <div class="control-trigger-wrapper">
+                                    <button class="trigger-recognition-btn" id="btn-trigger-mock-recon">
+                                        <div class="inner-circle">
+                                            <i data-lucide="scan-face"></i>
+                                        </div>
+                                    </button>
+                                    <span class="trigger-hint">Tap to Initiate Neural Scan</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SCREEN 5: ATTENDANCE SUCCESS SCREEN -->
+                    <div class="screen" id="screen-success" data-screen-title="Success">
+                        <div class="success-screen-layout">
+                            <div class="success-glow"></div>
+
+                            <!-- Success Confetti and Badge Area -->
+                            <div class="badge-success-space">
+                                <div class="outer-glowing-ring">
+                                    <div class="inner-green-sphere">
+                                        <svg class="checkmark-draw-svg" viewBox="0 0 52 52">
+                                            <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none" />
+                                            <path class="checkmark-check" fill="none"
+                                                d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="success-sparks">
+                                    <span class="spark s-1"></span>
+                                    <span class="spark s-2"></span>
+                                    <span class="spark s-3"></span>
+                                    <span class="spark s-4"></span>
+                                </div>
+                            </div>
+
+                            <div class="success-text-header">
+                                <h1 class="main-success-title">Face Verified Successfully</h1>
+                                <div class="success-subtitle-pill">
+                                    <i data-lucide="shield-check"></i>
+                                    <span>Attendance Marked Present</span>
+                                </div>
+                            </div>
+
+                            <!-- Record Summary Card (Receipt style card) -->
+                            <div class="attendance-receipt-card">
+                                <div class="receipt-header">
+                                    <div class="college-logo-mini-block">
+                                        <span class="mini-crest-text">SVPCET</span>
+                                    </div>
+                                    <div class="receipt-title">
+                                        <h5>Faculty Attendance Slip</h5>
+                                        <span class="receipt-id">TXN-794026815</span>
+                                    </div>
+                                </div>
+
+                                <div class="receipt-divider"></div>
+
+                                <div class="receipt-row-data">
+                                    <div class="receipt-column">
+                                        <span class="row-title">Faculty Name</span>
+                                        <span class="row-value spec-name" id="success-fac-name">Dr. Sarah Jenkins</span>
+                                    </div>
+                                    <div class="receipt-column align-right">
+                                        <span class="row-title">Department</span>
+                                        <span class="row-value" id="success-fac-dept">CS Department</span>
+                                    </div>
+                                </div>
+
+                                <div class="receipt-row-data">
+                                    <div class="receipt-column">
+                                        <span class="row-title">Date & Time</span>
+                                        <span class="row-value" id="success-timestamp">July 23, 2026 • 09:18 AM</span>
+                                    </div>
+                                    <div class="receipt-column align-right">
+                                        <span class="row-title">Verification Mode</span>
+                                        <span class="row-value tech-hl">Face Biometrics</span>
+                                    </div>
+                                </div>
+
+                                <div class="receipt-row-data">
+                                    <div class="receipt-column" style="grid-column: span 2;">
+                                        <span class="row-title">Verified Location</span>
+                                        <span class="row-value" id="success-verified-location"><i data-lucide="map-pin"
+                                                style="width: 12px; height: 12px; display: inline; vertical-align: middle; stroke: #10B981;"></i>
+                                            SVPCET Main Campus • Block-C Lab 4</span>
+                                    </div>
+                                </div>
+
+                                <div class="secure-tag-receipt">
+                                    <i data-lucide="check-shield"></i>
+                                    <span>Biometric match confidence: 99.82% (On-host Match)</span>
+                                </div>
+                            </div>
+
+                            <!-- Back Action Button -->
+                            <button type="button" class="success-done-btn" id="btn-success-ok">
+                                <span>Go to Dashboard</span>
+                                <i data-lucide="home"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- SCREEN 6: ATTENDANCE HISTORY SCREEN -->
+                    <div class="screen" id="screen-history" data-screen-title="History">
+                        <!-- Top Navbar with back button -->
+                        <header class="app-top-header-sub">
+                            <button class="top-nav-back" id="btn-back-history">
+                                <i data-lucide="chevron-left"></i>
+                            </button>
+                            <h4>Attendance Records</h4>
+                            <div class="space-placeholder"></div>
+                        </header>
+
+                        <!-- Scrollable Screen Inner -->
+                        <div class="history-scroll-content">
+
+                            <!-- Top stats header -->
+                            <div class="history-summary-header">
+                                <div class="history-summary-radial">
+                                    <svg class="small-radial" viewBox="0 0 36 36">
+                                        <path class="radial-bg"
+                                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                        <path class="radial-fill" stroke-dasharray="94, 100"
+                                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                    </svg>
+                                    <div class="radial-text">
+                                        <span>94%</span>
+                                    </div>
+                                </div>
+                                <div class="summary-meta-desc">
+                                    <h3>July 2026 Performance</h3>
+                                    <p>Comprehensive attendance status and logs for the current academic session.</p>
+                                </div>
+                            </div>
+
+                            <!-- Highlights Cards row -->
+                            <div class="status-cards-row">
+                                <div class="mini-status-card present">
+                                    <div class="card-chip green"></div>
+                                    <span class="mini-card-val">17 Days</span>
+                                    <span class="mini-card-lbl">Present</span>
+                                </div>
+                                <div class="mini-status-card late">
+                                    <div class="card-chip orange"></div>
+                                    <span class="mini-card-val">1 Day</span>
+                                    <span class="mini-card-lbl">Late</span>
+                                </div>
+                                <div class="mini-status-card absent">
+                                    <div class="card-chip red"></div>
+                                    <span class="mini-card-val">0 Days</span>
+                                    <span class="mini-card-lbl">Absent</span>
+                                </div>
+                            </div>
+
+                            <!-- Interactive Monthly Calendar Grid -->
+                            <div class="calendar-card-container">
+                                <div class="calendar-header-nav">
+                                    <button class="cal-arrow"><i data-lucide="chevron-left"></i></button>
+                                    <h4 class="cal-month-title">July 2026</h4>
+                                    <button class="cal-arrow"><i data-lucide="chevron-right"></i></button>
+                                </div>
+
+                                <div class="calendar-grid-wrapper">
+                                    <!-- Weekdays -->
+                                    <div class="weekdays-row">
+                                        <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                                    </div>
+                                    <!-- Days grid (Starts on Wednesday for July 2026) -->
+                                    <div class="days-grid-body" id="calendar-days-container">
+                                        <!-- Days rendered by js: 1 to 31 -->
+                                        <!-- 1: present, 2: present, ..., 15: late, 23: current select, etc. -->
+                                    </div>
+                                </div>
+
+                                <div class="calendar-legend">
+                                    <div class="leg-item"><span class="dot-ind green"></span><span>Present</span></div>
+                                    <div class="leg-item"><span class="dot-ind orange"></span><span>Late Check-in</span>
+                                    </div>
+                                    <div class="leg-item"><span class="dot-ind red"></span><span>Absent</span></div>
+                                    <div class="leg-item"><span class="dot-ind gray"></span><span>Holiday / Off</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Date-wise logs list -->
+                            <div class="history-logs-section">
+                                <h3 class="logs-sec-title">Recent Activity Logs</h3>
+                                <div class="logs-list-wrapper" id="history-logs-container">
+                                    <!-- Rendered dynamically by JavaScript -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sticky Back to Dashboard footer button -->
+                        <div class="history-footer-actions">
+                            <button class="btn-history-back-dash" id="btn-history-bottom-back">
+                                <i data-lucide="layout-grid"></i>
+                                <span>Return to Dashboard</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Navigation Bar Overlay Indicator (Android Pill) -->
+                <div class="device-footer">
+                    <div class="home-indicator" id="btn-device-home-pill"></div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Script connection -->
+    <script src="app.js"></script>
+</body>
+
+</html>

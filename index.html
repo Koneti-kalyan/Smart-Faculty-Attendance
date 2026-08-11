@@ -613,6 +613,10 @@
                                         style="width: 12px; height: 12px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i>Biometrics
                                     Missing
                                 </div>
+                                <button type="button" id="btn-profile-re-enroll"
+                                    style="margin-top: 4px; font-size: 11px; padding: 6px 12px; background: rgba(0, 242, 254, 0.12); border: 1px solid var(--color-accent); color: var(--color-accent); border-radius: 8px; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 600;">
+                                    <i data-lucide="scan-face" style="width: 14px; height: 14px;"></i> Re-Enroll Face Profile
+                                </button>
                             </div>
 
                             <!-- General Information Section -->
@@ -921,13 +925,16 @@
 
                     <!-- SCREEN 6: ATTENDANCE HISTORY SCREEN -->
                     <div class="screen" id="screen-history" data-screen-title="History">
-                        <!-- Top Navbar with back button -->
+                        <!-- Top Navbar with back button & CSV Download -->
                         <header class="app-top-header-sub">
                             <button class="top-nav-back" id="btn-back-history">
                                 <i data-lucide="chevron-left"></i>
                             </button>
                             <h4>Attendance Records</h4>
-                            <div class="space-placeholder"></div>
+                            <button class="top-nav-back" id="btn-export-csv" title="Download CSV Report"
+                                style="border-radius: 8px; width: auto; padding: 0 10px; font-size: 11px; gap: 4px; background: rgba(0, 242, 254, 0.1); color: var(--color-accent); border: 1px solid rgba(0, 242, 254, 0.3);">
+                                <i data-lucide="download" style="width: 14px; height: 14px;"></i> CSV
+                            </button>
                         </header>
 
                         <!-- Scrollable Screen Inner -->

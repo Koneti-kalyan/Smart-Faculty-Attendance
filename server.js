@@ -1,51 +1,65 @@
-const http = require('http');
-const fs = require('fs');
+const express = require('express');
+const cors = require('cors');
 const path = require('path');
+const { initDatabase } = require('./database/db');
 
-const PORT = 8080;
+const authRoutes = require('./routes/auth');
+const attendanceRoutes = require('./routes/attendance');
+const geofenceRoutes = require('./routes/geofence');
 
-const MIME_TYPES = {
-    '.html': 'text/html',
-    '.css': 'text/css',
-    '.js': 'text/javascript',
-    '.json': 'application/json',
-    '.png': 'image/png',
-    '.jpg': 'image/jpeg',
-    '.gif': 'image/gif',
-    '.svg': 'image/svg+xml',
-    '.ico': 'image/x-icon'
-};
+const app = express();
+const PORT = process.env.PORT || 8080;
 
-const server = http.createServer((req, res) => {
-    // Clean query parameters from URL path
-    const urlPath = req.url.split('?')[0];
-    let filePath = path.join(__dirname, urlPath === '/' ? 'index.html' : urlPath);
-    const ext = path.extname(filePath).toLowerCase();
+// Enable Middleware
+app.use(cors());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-    // Safety check - prevent directory traversal outside root directory
-    if (!filePath.startsWith(__dirname)) {
-        res.statusCode = 403;
-        res.end('Access Denied');
-        return;
-    }
+// Request Logging Middleware
+app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    next();
+});
 
-    fs.readFile(filePath, (error, content) => {
-        if (error) {
-            if (error.code === 'ENOENT') {
-                res.writeHead(404, { 'Content-Type': 'text/plain' });
-                res.end('404 Not Found');
-            } else {
-                res.writeHead(500, { 'Content-Type': 'text/plain' });
-                res.end(`Server Error: ${error.code}`);
-            }
-        } else {
-            const contentType = MIME_TYPES[ext] || 'application/octet-stream';
-            res.writeHead(200, { 'Content-Type': contentType });
-            res.end(content, 'utf-8');
-        }
+// API Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/attendance', attendanceRoutes);
+app.use('/api/geofence', geofenceRoutes);
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+    res.json({
+        status: 'online',
+        system: 'SVPCET Smart Faculty Attendance System',
+        timestamp: new Date().toISOString()
     });
 });
 
-server.listen(PORT, () => {
-    console.log(`Server is running at http://localhost:${PORT}`);
+// Static Files Serving
+app.use(express.static(__dirname));
+
+// Fallback to index.html for SPA / client routing
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+    console.error('Unhandled Express Error:', err);
+    res.status(500).json({
+        success: false,
+        message: 'Internal Server Error',
+        error: err.message
+    });
+});
+
+// Initialize Database and Start Server
+initDatabase().then(() => {
+    app.listen(PORT, () => {
+        console.log(`====================================================`);
+        console.log(`  🎓 SVPCET Smart Faculty Attendance Full-Stack Server`);
+        console.log(`  🚀 Backend API:  http://localhost:${PORT}/api/health`);
+        console.log(`  📱 Web Portal:   http://localhost:${PORT}`);
+        console.log(`====================================================`);
+    });
 });

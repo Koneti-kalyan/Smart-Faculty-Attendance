@@ -14,3 +14,7 @@ yarn-error.log*
 # Antigravity & AI workspace metadata
 .gemini/
 .agents/
+
+# Database runtime files
+database/*.db
+database/*.json
